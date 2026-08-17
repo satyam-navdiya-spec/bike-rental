@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,7 +11,8 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      cursor: none; /* Hide default browser cursor */
+      cursor: none;
+      /* Hide default browser cursor */
     }
 
     body {
@@ -185,7 +187,8 @@
       letter-spacing: 1px;
     }
 
-    .input-group input, .input-group select {
+    .input-group input,
+    .input-group select {
       background: transparent;
       border: none;
       color: #fff;
@@ -255,6 +258,7 @@
       font-weight: 800;
       letter-spacing: 2px;
       border-bottom: 1px solid #1f242e;
+      object-fit: cover;
     }
 
     .bike-info {
@@ -325,6 +329,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Custom Glow Cursor Elements -->
@@ -347,7 +352,7 @@
     <div class="hero-badge">Feel The Freedom</div>
     <h1>Unleash Your Ultimate Ride</h1>
     <p>Rent high-performance sportbikes, urban cruisers, and long-range adventure bikes with unlimited mileage.</p>
-    
+
     <!-- Booking Form -->
     <div class="search-bar">
       <div class="input-group">
@@ -376,7 +381,10 @@
     <h2 class="section-title">Select Your Machine</h2>
     <div class="fleet-grid">
       <div class="bike-card hover-target">
-        <div class="bike-img">ADVENTURE</div>
+        <div class="bike-img">
+          <img src="https://cdn.bikedekho.com/processedimages/bmw/r-1250-gs/source/r-1250-gs6750213382072.jpg"
+            width="100%" style="object-fit: cove;">
+        </div>
         <div class="bike-info">
           <div class="bike-tag">Touring</div>
           <h3 class="bike-title">BMW R 1250 GS</h3>
@@ -391,7 +399,9 @@
       </div>
 
       <div class="bike-card hover-target">
-        <div class="bike-img">SPORTBIKE</div>
+        <div class="bike-img"> <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT24wDIkx0tVa5nx27s96xE5RSEL0KwKDGmh1BtDDSwg&s=10"
+            width="100%" style="object-fit: cove;"></div>
         <div class="bike-info">
           <div class="bike-tag">Performance</div>
           <h3 class="bike-title">Ducati Panigale V4</h3>
@@ -406,7 +416,9 @@
       </div>
 
       <div class="bike-card hover-target">
-        <div class="bike-img">CRUISER</div>
+        <div class="bike-img">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHoaXK1s2TUVe-XA6i78kFCKvUJ5KnnnEjJOWoJv9swQ&s=10" width="100%" style="object-fit: cove;" >
+        </div>
         <div class="bike-info">
           <div class="bike-tag">Urban / Highway</div>
           <h3 class="bike-title">Harley-Davidson Sportster S</h3>
@@ -455,4 +467,5 @@
     });
   </script>
 </body>
+
 </html>
