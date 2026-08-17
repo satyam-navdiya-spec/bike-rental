@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Epic Routes | APEX RIDE</title>
+  <style>
+    /* RESET & BASE */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      cursor: none; /* Hide default browser cursor */
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0d0f12;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    /* CUSTOM GLOW CURSOR */
+    .cursor-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #00e5ff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease-out;
+      box-shadow: 0 0 10px #00e5ff;
+    }
+
+    .cursor-outline {
+      width: 40px;
+      height: 40px;
+      border: 2px solid rgba(0, 229, 255, 0.4);
+      position: fixed;
+      top: 0;
+      left: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease-out, width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
+    }
+
+    /* Hover state for cursor */
+    body.hovering .cursor-outline {
+      width: 60px;
+      height: 60px;
+      border-color: #00e5ff;
+      background-color: rgba(0, 229, 255, 0.08);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+    }
+
+    /* NAVIGATION */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.8rem 6%;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      background: rgba(13, 15, 18, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: #00e5ff;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #b0b8c4;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #00e5ff;
+    }
+
+    /* PAGE HERO */
+    .routes-hero {
+      padding: 11rem 6% 4rem;
+      text-align: center;
+      background: radial-gradient(circle at center, #171b22 0%, #0d0f12 100%);
+      border-bottom: 1px solid #1f242e;
+    }
+
+    .routes-badge {
+      color: #00e5ff;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 0.4rem 1.2rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+
+    .routes-hero h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .routes-hero p {
+      font-size: 1.15rem;
+      color: #9aa4b2;
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* FILTER TABS */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 3rem 6% 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: #14171d;
+      border: 1px solid #202530;
+      color: #8a96a8;
+      padding: 0.7rem 1.6rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #00e5ff;
+      color: #0d0f12;
+      border-color: #00e5ff;
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.25);
+    }
+
+    /* ROUTES GRID */
+    .routes-section {
+      padding: 2rem 6% 7rem;
+    }
+
+    .routes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .route-card {
+      background: #14171d;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #202530;
+      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .route-card:hover {
+      transform: translateY(-12px);
+      border-color: #00e5ff;
+      box-shadow: 0 20px 40px rgba(0, 229, 255, 0.12);
+    }
+
+    .route-img-container {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+    }
+
+    .route-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .route-card:hover .route-img {
+      transform: scale(1.06);
+    }
+
+    .difficulty-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.3rem 0.9rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      backdrop-filter: blur(8px);
+    }
+
+    .difficulty-easy {
+      background: rgba(0, 230, 118, 0.2);
+      color: #00e676;
+      border: 1px solid rgba(0, 230, 118, 0.4);
+    }
+
+    .difficulty-moderate {
+      background: rgba(255, 171, 0, 0.2);
+      color: #ffab00;
+      border: 1px solid rgba(255, 171, 0, 0.4);
+    }
+
+    .difficulty-expert {
+      background: rgba(255, 23, 68, 0.2);
+      color: #ff1744;
+      border: 1px solid rgba(255, 23, 68, 0.4);
+    }
+
+    .route-info {
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .route-tag {
+      font-size: 0.75rem;
+      color: #00e5ff;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .route-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.8rem;
+    }
+
+    .route-desc {
+      font-size: 0.9rem;
+      color: #8a96a8;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .route-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      padding: 1rem 0;
+      border-top: 1px solid #1f242e;
+      border-bottom: 1px solid #1f242e;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: #6c788a;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-value {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .route-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .recommended-bike {
+      font-size: 0.8rem;
+      color: #b0b8c4;
+      font-weight: 600;
+    }
+
+    .btn-explore {
+      background: transparent;
+      border: 1px solid #00e5ff;
+      color: #00e5ff;
+      padding: 0.6rem 1.4rem;
+      border-radius: 8px;
+      font-weight: 700;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-explore:hover {
+      background: #00e5ff;
+      color: #0d0f12;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Custom Glow Cursor Elements -->
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-outline" id="cursor-outline"></div>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="index.html" class="logo hover-target">APEX<span>RIDE</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#home" class="hover-target">Home</a></li>
+      <li><a href="index.html#fleet" class="hover-target">Bikes</a></li>
+      <li><a href="routes.html" class="hover-target active">Routes</a></li>
+      <li><a href="index.html#contact" class="hover-target">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Routes Hero -->
+  <section class="routes-hero">
+    <div class="routes-badge">Curated Trails</div>
+    <h1>Conquer Legendary Roads</h1>
+    <p>Handpicked scenic passes, canyon twisties, and long-range highway sweeps tailored for sportbikes, cruisers, and adventure tourers.</p>
+  </section>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <button class="filter-btn active hover-target" onclick="filterRoutes('all')">All Trails</button>
+    <button class="filter-btn hover-target" onclick="filterRoutes('coastal')">Coastal & Highway</button>
+    <button class="filter-btn hover-target" onclick="filterRoutes('mountain')">Mountain Passes</button>
+    <button class="filter-btn hover-target" onclick="filterRoutes('canyon')">Canyon Twisties</button>
+  </div>
+
+  <!-- Routes Section -->
+  <section class="routes-section">
+    <div class="routes-grid">
+
+      <!-- Route 1 -->
+      <div class="route-card hover-target" data-category="coastal">
+        <div class="route-img-container">
+          <span class="difficulty-badge difficulty-easy">Easy</span>
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="Pacific Coast Highway" class="route-img" />
+        </div>
+        <div class="route-info">
+          <div class="route-tag">Coastal Highway</div>
+          <h3 class="route-title">Pacific Coast Highway Run</h3>
+          <p class="route-desc">Sweep through sweeping ocean cliffs, coastal mist, and classic seaside pitstops with continuous smooth pavement.</p>
+          <div class="route-stats">
+            <div class="stat-item">
+              <span class="stat-label">Distance</span>
+              <span class="stat-value">210 km</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Duration</span>
+              <span class="stat-value">3.5 hrs</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Elevation</span>
+              <span class="stat-value">+320 m</span>
+            </div>
+          </div>
+          <div class="route-footer">
+            <span class="recommended-bike">Best for: Cruiser / Sportster</span>
+            <button class="btn-explore hover-target">View Route</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Route 2 -->
+      <div class="route-card hover-target" data-category="canyon">
+        <div class="route-img-container">
+          <span class="difficulty-badge difficulty-expert">Expert</span>
+          <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80" alt="Mulholland Highway" class="route-img" />
+        </div>
+        <div class="route-info">
+          <div class="route-tag">Canyon Loop</div>
+          <h3 class="route-title">Mulholland Canyon Hairpins</h3>
+          <p class="route-desc">Sharp technical switchbacks and tight hairpins designed for experienced riders looking to test lean angles and throttle control.</p>
+          <div class="route-stats">
+            <div class="stat-item">
+              <span class="stat-label">Distance</span>
+              <span class="stat-value">85 km</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Duration</span>
+              <span class="stat-value">1.8 hrs</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Elevation</span>
+              <span class="stat-value">+780 m</span>
+            </div>
+          </div>
+          <div class="route-footer">
+            <span class="recommended-bike">Best for: Ducati Panigale V4</span>
+            <button class="btn-explore hover-target">View Route</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Route 3 -->
+      <div class="route-card hover-target" data-category="mountain">
+        <div class="route-img-container">
+          <span class="difficulty-badge difficulty-moderate">Moderate</span>
+          <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80" alt="Alpine Mountain Pass" class="route-img" />
+        </div>
+        <div class="route-info">
+          <div class="route-tag">Alpine Pass</div>
+          <h3 class="route-title">High Sierra Summit Pass</h3>
+          <p class="route-desc">High-altitude mountain road crossing pine forests, rocky ridges, and expansive valley overlooks with moderate elevation gains.</p>
+          <div class="route-stats">
+            <div class="stat-item">
+              <span class="stat-label">Distance</span>
+              <span class="stat-value">340 km</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Duration</span>
+              <span class="stat-value">5.0 hrs</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Elevation</span>
+              <span class="stat-value">+1,850 m</span>
+            </div>
+          </div>
+          <div class="route-footer">
+            <span class="recommended-bike">Best for: BMW R 1250 GS</span>
+            <button class="btn-explore hover-target">View Route</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Custom Cursor & Interaction Scripts -->
+  <script>
+    const cursorDot = document.getElementById("cursor-dot");
+    const cursorOutline = document.getElementById("cursor-outline");
+
+    // Track pointer movement
+    window.addEventListener("mousemove", (e) => {
+      const posX = e.clientX;
+      const posY = e.clientY;
+
+      cursorDot.style.left = `${posX}px`;
+      cursorDot.style.top = `${posY}px`;
+
+      cursorOutline.animate({
+        left: `${posX}px`,
+        top: `${posY}px`
+      }, { duration: 220, fill: "forwards" });
+    });
+
+    // Expand cursor ring when hovering target elements
+    function initCursorEvents() {
+      const hoverTargets = document.querySelectorAll(".hover-target");
+      hoverTargets.forEach((target) => {
+        target.addEventListener("mouseenter", () => {
+          document.body.classList.add("hovering");
+        });
+        target.addEventListener("mouseleave", () => {
+          document.body.classList.remove("hovering");
+        });
+      });
+    }
+
+    initCursorEvents();
+
+    // Category Filter Functionality
+    function filterRoutes(category) {
+      const cards = document.querySelectorAll('.route-card');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      cards.forEach(card => {
+        if (category === 'all' || card.getAttribute('data-category') === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
